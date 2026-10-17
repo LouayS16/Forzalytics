@@ -1,0 +1,32 @@
+<svg width="220" height="48" viewBox="0 0 220 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="forzaTop" x1="4" y1="6" x2="38" y2="16" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#00ff87" />
+      <stop offset="100%" stop-color="#10b981" />
+    </linearGradient>
+    <linearGradient id="forzaMid" x1="4" y1="16" x2="32" y2="26" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+    <linearGradient id="forzaBot" x1="4" y1="25" x2="22" y2="37" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#06b6d4" />
+      <stop offset="100%" stop-color="#00f0ff" />
+    </linearGradient>
+    <filter id="glowF" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="0" stdDeviation="2.5" flood-color="#00ff87" flood-opacity="0.55" />
+    </filter>
+  </defs>
+
+  <g transform="translate(2, 2)">
+    <!-- Top Wing -->
+    <path d="M6 11C6 8.24 8.24 6 11 6H34C36.76 6 38.3 9.3 36.4 11.3L32.2 15.5C31 16.7 29.3 17.4 27.6 17.4H11C8.24 17.4 6 15.16 6 12.4V11Z" fill="url(#forzaTop)" filter="url(#glowF)" />
+    <!-- Middle Wing -->
+    <path d="M6 20.5C6 17.74 8.24 15.5 11 15.5H27C29.76 15.5 31.3 18.8 29.4 20.8L25.8 24.4C24.7 25.5 23.2 26.1 21.6 26.1H11C8.24 26.1 6 23.86 6 21.1V20.5Z" fill="url(#forzaMid)" />
+    <!-- Bottom Fin -->
+    <path d="M6 28C6 26.34 7.34 25 9 25H17.5C19.7 25 20.6 27.7 19 29.3L13.8 34.5C12.5 35.8 10.4 36.1 8.8 35.2L7.4 34.4C6.5 33.9 6 32.9 6 31.9V28Z" fill="url(#forzaBot)" />
+  </g>
+
+  <text x="52" y="32" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="24" letter-spacing="0.02em">
+    <tspan fill="#00ff87">FORZA</tspan><tspan fill="#ffffff" letter-spacing="0.03em">LYTICS</tspan>
+  </text>
+</svg>

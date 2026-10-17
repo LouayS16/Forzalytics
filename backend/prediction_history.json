@@ -1,0 +1,406 @@
+[
+  {
+    "id": "20261017185618574465",
+    "match": "RC Celta de Vigo vs Deportivo Alav\u00e9s",
+    "home_team": "Celta Vigo",
+    "away_team": "Alaves",
+    "home_logo": "https://crests.football-data.org/558.png",
+    "away_logo": "https://crests.football-data.org/263.png",
+    "competition": "La Liga",
+    "kickoff_utc": "2026-10-18T14:15:00Z",
+    "predicted_outcome": "Home Win",
+    "probabilities": {
+      "home_win": 0.595,
+      "draw": 0.355,
+      "away_win": 0.05
+    },
+    "key_drivers": [
+      "Celta Vigo holds an elite goal difference edge (+1.0 net margin/match) in recent games."
+    ],
+    "timestamp": "2026-10-17T18:56:18.573328+00:00",
+    "fixture": {
+      "id": "laliga-20261018-celtavigo-alaves",
+      "competitionId": "laliga",
+      "competitionName": "La Liga",
+      "round": "Matchday 9",
+      "kickoffDate": "2026-10-18",
+      "kickoffTime": "14:15",
+      "kickoffUtc": "2026-10-18T14:15:00Z",
+      "status": "SCHEDULED",
+      "homeTeam": {
+        "id": "Celta Vigo",
+        "name": "RC Celta de Vigo",
+        "normalizedName": "Celta Vigo",
+        "logo": "https://crests.football-data.org/558.png"
+      },
+      "awayTeam": {
+        "id": "Alaves",
+        "name": "Deportivo Alav\u00e9s",
+        "normalizedName": "Alaves",
+        "logo": "https://crests.football-data.org/263.png"
+      },
+      "isCompleted": false,
+      "score": null
+    }
+  },
+  {
+    "id": "20261017185536108376",
+    "match": "Valencia CF vs Athletic Club",
+    "home_team": "Valencia",
+    "away_team": "Ath. Bilbao",
+    "home_logo": "https://crests.football-data.org/95.png",
+    "away_logo": "https://crests.football-data.org/77.png",
+    "competition": "La Liga",
+    "kickoff_utc": "2026-10-17T19:00:00Z",
+    "predicted_outcome": "Away Win",
+    "probabilities": {
+      "home_win": 0.031,
+      "draw": 0.258,
+      "away_win": 0.711
+    },
+    "key_drivers": [
+      "Ath. Bilbao carries superior offensive/defensive form (+1.8 net GD differential).",
+      "Ath. Bilbao in stronger point-scoring momentum (+4 pts advantage)."
+    ],
+    "timestamp": "2026-10-17T18:55:36.106906+00:00",
+    "fixture": {
+      "id": "laliga-20261017-valencia-ath.bilbao",
+      "competitionId": "laliga",
+      "competitionName": "La Liga",
+      "round": "Matchday 9",
+      "kickoffDate": "2026-10-17",
+      "kickoffTime": "19:00",
+      "kickoffUtc": "2026-10-17T19:00:00Z",
+      "status": "SCHEDULED",
+      "homeTeam": {
+        "id": "Valencia",
+        "name": "Valencia CF",
+        "normalizedName": "Valencia",
+        "logo": "https://crests.football-data.org/95.png"
+      },
+      "awayTeam": {
+        "id": "Ath. Bilbao",
+        "name": "Athletic Club",
+        "normalizedName": "Ath. Bilbao",
+        "logo": "https://crests.football-data.org/77.png"
+      },
+      "isCompleted": false,
+      "score": null
+    }
+  },
+  {
+    "id": "20261017185457621789",
+    "match": "Betis vs Barcelona",
+    "home_team": "Betis",
+    "away_team": "Barcelona",
+    "home_logo": "",
+    "away_logo": "",
+    "competition": "General",
+    "kickoff_utc": "2026-10-17T18:54:55.316796+00:00",
+    "predicted_outcome": "Away Win",
+    "probabilities": {
+      "home_win": 0.006,
+      "draw": 0.061,
+      "away_win": 0.933
+    },
+    "key_drivers": [
+      "Barcelona carries superior offensive/defensive form (+2.8 net GD differential).",
+      "Barcelona threatens with higher target accuracy on the counter (6.4 SOT/game).",
+      "Barcelona in stronger point-scoring momentum (+5 pts advantage)."
+    ],
+    "timestamp": "2026-10-17T18:54:57.620966+00:00",
+    "fixture": {
+      "id": "custom-betis-barcelona",
+      "competitionName": "General",
+      "kickoffUtc": "2026-10-17T18:54:55.316796+00:00",
+      "homeTeam": {
+        "name": "Betis",
+        "normalizedName": "Betis"
+      },
+      "awayTeam": {
+        "name": "Barcelona",
+        "normalizedName": "Barcelona"
+      }
+    }
+  },
+  {
+    "id": "20261017184209418903",
+    "match": "CA Osasuna vs Real Racing Club de Santander",
+    "competition": "La Liga",
+    "predicted_outcome": "Draw",
+    "probabilities": {
+      "home_win": 0.036,
+      "draw": 0.52,
+      "away_win": 0.444
+    },
+    "timestamp": "2026-10-17T18:42:09.417555",
+    "home_team": "CA Osasuna",
+    "away_team": "Real Racing Club de Santander"
+  },
+  {
+    "id": "20261017183710248092",
+    "match": "Valencia CF vs Athletic Club",
+    "competition": "La Liga",
+    "predicted_outcome": "Away Win",
+    "probabilities": {
+      "home_win": 0.031,
+      "draw": 0.258,
+      "away_win": 0.711
+    },
+    "timestamp": "2026-10-17T18:37:10.245973",
+    "home_team": "Valencia CF",
+    "away_team": "Athletic Club"
+  },
+  {
+    "id": "20261017183531350844",
+    "match": "Barcelona vs Real Madryt",
+    "competition": "General",
+    "predicted_outcome": "Home Win",
+    "probabilities": {
+      "home_win": 0.929,
+      "draw": 0.069,
+      "away_win": 0.003
+    },
+    "timestamp": "2026-10-17T18:35:31.350192",
+    "home_team": "Barcelona",
+    "away_team": "Real Madryt"
+  },
+  {
+    "id": "20261017181538110409",
+    "match": "Valencia CF vs Athletic Club",
+    "competition": "La Liga",
+    "predicted_outcome": "Away Win",
+    "probabilities": {
+      "home_win": 0.031,
+      "draw": 0.258,
+      "away_win": 0.711
+    },
+    "timestamp": "2026-10-17T18:15:38.109151",
+    "home_team": "Valencia CF",
+    "away_team": "Athletic Club"
+  },
+  {
+    "id": "20261014143444731231",
+    "match": "Everton FC vs Chelsea FC",
+    "competition": "Premier League",
+    "predicted_outcome": "Draw",
+    "probabilities": {
+      "home_win": 0.131,
+      "draw": 0.453,
+      "away_win": 0.416
+    },
+    "timestamp": "2026-10-14T14:34:44.729140",
+    "home_team": "Everton FC",
+    "away_team": "Chelsea FC"
+  },
+  {
+    "id": "20261013130813090667",
+    "match": "Real Betis Balompi\u00e9 vs FC Barcelona",
+    "competition": "La Liga",
+    "predicted_outcome": "Away Win",
+    "probabilities": {
+      "home_win": 0.02,
+      "draw": 0.171,
+      "away_win": 0.809
+    },
+    "timestamp": "2026-10-13T13:08:13.087748",
+    "home_team": "Real Betis Balompi\u00e9",
+    "away_team": "FC Barcelona"
+  },
+  {
+    "id": "20261013110642068636",
+    "match": "Real Madrid CF vs Sevilla FC",
+    "competition": "La Liga",
+    "predicted_outcome": "Home Win",
+    "probabilities": {
+      "home_win": 0.734,
+      "draw": 0.245,
+      "away_win": 0.022
+    },
+    "timestamp": "2026-10-13T11:06:42.067253",
+    "home_team": "Real Madrid CF",
+    "away_team": "Sevilla FC"
+  },
+  {
+    "id": "20261013110358681950",
+    "match": "Real Betis Balompi\u00e9 vs FC Barcelona",
+    "competition": "La Liga",
+    "predicted_outcome": "Away Win",
+    "probabilities": {
+      "home_win": 0.02,
+      "draw": 0.171,
+      "away_win": 0.809
+    },
+    "timestamp": "2026-10-13T11:03:58.680540",
+    "home_team": "Real Betis Balompi\u00e9",
+    "away_team": "FC Barcelona"
+  },
+  {
+    "id": "20261013110236109860",
+    "match": "Real Betis Balompi\u00e9 vs FC Barcelona",
+    "competition": "La Liga",
+    "predicted_outcome": "Home Win",
+    "probabilities": {
+      "home_win": 0.609,
+      "draw": 0.312,
+      "away_win": 0.079
+    },
+    "timestamp": "2026-10-13T11:02:36.108683",
+    "home_team": "Real Betis Balompi\u00e9",
+    "away_team": "FC Barcelona"
+  },
+  {
+    "id": "20261012093149701280",
+    "match": "RCD Espanyol de Barcelona vs Club Atl\u00e9tico de Madrid",
+    "competition": "La Liga",
+    "predicted_outcome": "Away Win",
+    "probabilities": {
+      "home_win": 0.02,
+      "draw": 0.249,
+      "away_win": 0.731
+    },
+    "timestamp": "2026-10-12T09:31:49.699540",
+    "home_team": "RCD Espanyol de Barcelona",
+    "away_team": "Club Atl\u00e9tico de Madrid"
+  },
+  {
+    "id": "20261011230927607682",
+    "match": "Everton FC vs Chelsea FC",
+    "competition": "Premier League",
+    "predicted_outcome": "Draw",
+    "probabilities": {
+      "home_win": 0.131,
+      "draw": 0.453,
+      "away_win": 0.416
+    },
+    "timestamp": "2026-10-11T23:09:27.605901",
+    "home_team": "Everton FC",
+    "away_team": "Chelsea FC"
+  },
+  {
+    "id": "20261011230723308397",
+    "match": "Getafe CF vs Rayo Vallecano de Madrid",
+    "competition": "La Liga",
+    "predicted_outcome": "Draw",
+    "probabilities": {
+      "home_win": 0.235,
+      "draw": 0.504,
+      "away_win": 0.262
+    },
+    "timestamp": "2026-10-11T23:07:23.305394",
+    "home_team": "Getafe CF",
+    "away_team": "Rayo Vallecano de Madrid"
+  },
+  {
+    "id": "20261011230648587211",
+    "match": "Real Madrid CF vs Sevilla FC",
+    "competition": "La Liga",
+    "predicted_outcome": "Home Win",
+    "probabilities": {
+      "home_win": 0.797,
+      "draw": 0.193,
+      "away_win": 0.01
+    },
+    "timestamp": "2026-10-11T23:06:48.584672",
+    "home_team": "Real Madrid CF",
+    "away_team": "Sevilla FC"
+  },
+  {
+    "id": "20261011230623864782",
+    "match": "M\u00e1laga CF vs Real Sociedad de F\u00fatbol",
+    "competition": "La Liga",
+    "predicted_outcome": "Draw",
+    "probabilities": {
+      "home_win": 0.05,
+      "draw": 0.718,
+      "away_win": 0.232
+    },
+    "timestamp": "2026-10-11T23:06:23.862184",
+    "home_team": "M\u00e1laga CF",
+    "away_team": "Real Sociedad de F\u00fatbol"
+  },
+  {
+    "id": "20261011230436312437",
+    "match": "Real Betis Balompi\u00e9 vs FC Barcelona",
+    "competition": "La Liga",
+    "predicted_outcome": "Away Win",
+    "probabilities": {
+      "home_win": 0.02,
+      "draw": 0.171,
+      "away_win": 0.809
+    },
+    "timestamp": "2026-10-11T23:04:36.310135",
+    "home_team": "Real Betis Balompi\u00e9",
+    "away_team": "FC Barcelona"
+  },
+  {
+    "id": "20261011230138706646",
+    "match": "Real Betis Balompi\u00e9 vs FC Barcelona",
+    "competition": "La Liga",
+    "predicted_outcome": "Away Win",
+    "probabilities": {
+      "home_win": 0.02,
+      "draw": 0.171,
+      "away_win": 0.809
+    },
+    "timestamp": "2026-10-11T23:01:38.701973",
+    "home_team": "Real Betis Balompi\u00e9",
+    "away_team": "FC Barcelona"
+  },
+  {
+    "id": "20261011215655432568",
+    "match": "Real Betis Balompi\u00e9 vs FC Barcelona",
+    "competition": "La Liga",
+    "predicted_outcome": "Away Win",
+    "probabilities": {
+      "home_win": 0.02,
+      "draw": 0.171,
+      "away_win": 0.809
+    },
+    "timestamp": "2026-10-11T21:56:55.430412",
+    "home_team": "Real Betis Balompi\u00e9",
+    "away_team": "FC Barcelona"
+  },
+  {
+    "id": "20261011201803153343",
+    "match": "Levante UD vs Sevilla FC",
+    "competition": "La Liga",
+    "predicted_outcome": "Draw",
+    "probabilities": {
+      "home_win": 0.08,
+      "draw": 0.803,
+      "away_win": 0.118
+    },
+    "timestamp": "2026-10-11T20:18:03.144828",
+    "home_team": "Levante UD",
+    "away_team": "Sevilla FC"
+  },
+  {
+    "id": "20261011194421912479",
+    "match": "Villarreal CF vs Elche CF",
+    "competition": "La Liga",
+    "predicted_outcome": "Draw",
+    "probabilities": {
+      "home_win": 0.299,
+      "draw": 0.669,
+      "away_win": 0.032
+    },
+    "timestamp": "2026-10-11T19:44:21.910975",
+    "home_team": "Villarreal CF",
+    "away_team": "Elche CF"
+  },
+  {
+    "id": "20261011191447868750",
+    "match": "Tottenham Hotspur FC vs Coventry City FC",
+    "competition": "Premier League",
+    "predicted_outcome": "Draw",
+    "probabilities": {
+      "home_win": 0.152,
+      "draw": 0.775,
+      "away_win": 0.073
+    },
+    "timestamp": "2026-10-11T19:14:47.867518",
+    "home_team": "Tottenham Hotspur FC",
+    "away_team": "Coventry City FC"
+  }
+]
