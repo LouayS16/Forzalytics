@@ -1,5 +1,225 @@
 [
   {
+    "id": "20261019144724171778",
+    "match": "Real Betis Balompi\u00e9 vs Valencia CF",
+    "home_team": "Betis",
+    "away_team": "Valencia",
+    "home_logo": "https://crests.football-data.org/90.svg",
+    "away_logo": "https://crests.football-data.org/95.svg",
+    "competition": "La Liga",
+    "kickoff_utc": "2025-05-23T21:00:00Z",
+    "predicted_outcome": "Home Win",
+    "probabilities": {
+      "home_win": 0.739,
+      "draw": 0.239,
+      "away_win": 0.022
+    },
+    "key_drivers": [
+      "Betis holds an elite goal difference edge (+1.0 net margin/match) in recent games."
+    ],
+    "timestamp": "2026-10-19T14:47:24.170729+00:00",
+    "fixture": {
+      "id": "laliga-20250523-betis-valencia",
+      "competitionId": "laliga",
+      "competitionName": "La Liga",
+      "round": "Matchday 38",
+      "kickoffDate": "2025-05-23",
+      "kickoffTime": "21:00",
+      "kickoffUtc": "2025-05-23T21:00:00Z",
+      "status": "SCHEDULED",
+      "homeTeam": {
+        "id": "Betis",
+        "name": "Real Betis Balompi\u00e9",
+        "normalizedName": "Betis",
+        "logo": "https://crests.football-data.org/90.svg"
+      },
+      "awayTeam": {
+        "id": "Valencia",
+        "name": "Valencia CF",
+        "normalizedName": "Valencia",
+        "logo": "https://crests.football-data.org/95.svg"
+      },
+      "isCompleted": false,
+      "score": null
+    }
+  },
+  {
+    "id": "20261019144442509548",
+    "match": "Real Betis Balompi\u00e9 vs Valencia CF",
+    "home_team": "Betis",
+    "away_team": "Valencia",
+    "home_logo": "https://crests.football-data.org/90.svg",
+    "away_logo": "https://crests.football-data.org/95.svg",
+    "competition": "La Liga",
+    "kickoff_utc": "2025-05-23T21:00:00Z",
+    "predicted_outcome": "Home Win",
+    "probabilities": {
+      "home_win": 0.739,
+      "draw": 0.239,
+      "away_win": 0.022
+    },
+    "key_drivers": [
+      "Betis holds an elite goal difference edge (+1.0 net margin/match) in recent games."
+    ],
+    "timestamp": "2026-10-19T14:44:42.508686+00:00",
+    "fixture": {
+      "id": "laliga-20250523-betis-valencia",
+      "competitionId": "laliga",
+      "competitionName": "La Liga",
+      "round": "Matchday 38",
+      "kickoffDate": "2025-05-23",
+      "kickoffTime": "21:00",
+      "kickoffUtc": "2025-05-23T21:00:00Z",
+      "status": "SCHEDULED",
+      "homeTeam": {
+        "id": "Betis",
+        "name": "Real Betis Balompi\u00e9",
+        "normalizedName": "Betis",
+        "logo": "https://crests.football-data.org/90.svg"
+      },
+      "awayTeam": {
+        "id": "Valencia",
+        "name": "Valencia CF",
+        "normalizedName": "Valencia",
+        "logo": "https://crests.football-data.org/95.svg"
+      },
+      "isCompleted": false,
+      "score": null
+    }
+  },
+  {
+    "id": "20261019140853473137",
+    "match": "Real Betis Balompi\u00e9 vs Valencia CF",
+    "home_team": "Betis",
+    "away_team": "Valencia",
+    "home_logo": "https://crests.football-data.org/90.svg",
+    "away_logo": "https://crests.football-data.org/95.svg",
+    "competition": "La Liga",
+    "kickoff_utc": "2025-05-23T21:00:00Z",
+    "predicted_outcome": "Home Win",
+    "probabilities": {
+      "home_win": 0.739,
+      "draw": 0.239,
+      "away_win": 0.022
+    },
+    "key_drivers": [
+      "Betis holds an elite goal difference edge (+1.0 net margin/match) in recent games."
+    ],
+    "timestamp": "2026-10-19T14:08:53.470864+00:00",
+    "fixture": {
+      "id": "laliga-20250523-betis-valencia",
+      "competitionId": "laliga",
+      "competitionName": "La Liga",
+      "round": "Matchday 38",
+      "kickoffDate": "2025-05-23",
+      "kickoffTime": "21:00",
+      "kickoffUtc": "2025-05-23T21:00:00Z",
+      "status": "SCHEDULED",
+      "homeTeam": {
+        "id": "Betis",
+        "name": "Real Betis Balompi\u00e9",
+        "normalizedName": "Betis",
+        "logo": "https://crests.football-data.org/90.svg"
+      },
+      "awayTeam": {
+        "id": "Valencia",
+        "name": "Valencia CF",
+        "normalizedName": "Valencia",
+        "logo": "https://crests.football-data.org/95.svg"
+      },
+      "isCompleted": false,
+      "score": null
+    }
+  },
+  {
+    "id": "20261019140646035001",
+    "match": "Real Betis Balompi\u00e9 vs Valencia CF",
+    "home_team": "Betis",
+    "away_team": "Valencia",
+    "home_logo": "https://crests.football-data.org/90.svg",
+    "away_logo": "https://crests.football-data.org/95.svg",
+    "competition": "La Liga",
+    "kickoff_utc": "2025-05-23T21:00:00Z",
+    "predicted_outcome": "Home Win",
+    "probabilities": {
+      "home_win": 0.739,
+      "draw": 0.239,
+      "away_win": 0.022
+    },
+    "key_drivers": [
+      "Betis holds an elite goal difference edge (+1.0 net margin/match) in recent games."
+    ],
+    "timestamp": "2026-10-19T14:06:46.034414+00:00",
+    "fixture": {
+      "id": "laliga-20250523-betis-valencia",
+      "competitionId": "laliga",
+      "competitionName": "La Liga",
+      "round": "Matchday 38",
+      "kickoffDate": "2025-05-23",
+      "kickoffTime": "21:00",
+      "kickoffUtc": "2025-05-23T21:00:00Z",
+      "status": "SCHEDULED",
+      "homeTeam": {
+        "id": "Betis",
+        "name": "Real Betis Balompi\u00e9",
+        "normalizedName": "Betis",
+        "logo": "https://crests.football-data.org/90.svg"
+      },
+      "awayTeam": {
+        "id": "Valencia",
+        "name": "Valencia CF",
+        "normalizedName": "Valencia",
+        "logo": "https://crests.football-data.org/95.svg"
+      },
+      "isCompleted": false,
+      "score": null
+    }
+  },
+  {
+    "id": "20261019140625473618",
+    "match": "Real Betis Balompi\u00e9 vs Valencia CF",
+    "home_team": "Betis",
+    "away_team": "Valencia",
+    "home_logo": "https://crests.football-data.org/90.svg",
+    "away_logo": "https://crests.football-data.org/95.svg",
+    "competition": "La Liga",
+    "kickoff_utc": "2025-05-23T21:00:00Z",
+    "predicted_outcome": "Home Win",
+    "probabilities": {
+      "home_win": 0.739,
+      "draw": 0.239,
+      "away_win": 0.022
+    },
+    "key_drivers": [
+      "Betis holds an elite goal difference edge (+1.0 net margin/match) in recent games."
+    ],
+    "timestamp": "2026-10-19T14:06:25.473110+00:00",
+    "fixture": {
+      "id": "laliga-20250523-betis-valencia",
+      "competitionId": "laliga",
+      "competitionName": "La Liga",
+      "round": "Matchday 38",
+      "kickoffDate": "2025-05-23",
+      "kickoffTime": "21:00",
+      "kickoffUtc": "2025-05-23T21:00:00Z",
+      "status": "SCHEDULED",
+      "homeTeam": {
+        "id": "Betis",
+        "name": "Real Betis Balompi\u00e9",
+        "normalizedName": "Betis",
+        "logo": "https://crests.football-data.org/90.svg"
+      },
+      "awayTeam": {
+        "id": "Valencia",
+        "name": "Valencia CF",
+        "normalizedName": "Valencia",
+        "logo": "https://crests.football-data.org/95.svg"
+      },
+      "isCompleted": false,
+      "score": null
+    }
+  },
+  {
     "id": "20261018090227507191",
     "match": "Real Betis Balompi\u00e9 vs Valencia CF",
     "home_team": "Betis",
