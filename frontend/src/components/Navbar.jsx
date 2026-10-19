@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Home, Shield, Users, BarChart3, History } from "lucide-react";
+import { Home, Shield, Users, BarChart3, History, Target } from "lucide-react";
 import ForzalyticsLogo from "./ForzalyticsLogo";
 
 export default function Navbar({
@@ -20,6 +20,7 @@ export default function Navbar({
 
   const navItems = [
     { id: "home", label: "Home", icon: Home },
+    { id: "total-goals", label: "Total Goals (xG)", icon: Target, href: "/total_goals.html" },
     { id: "teams", label: "Teams", icon: Shield },
     { id: "players", label: "Players", icon: Users },
     { id: "statistics", label: "Statistics", icon: BarChart3 },
@@ -46,6 +47,20 @@ export default function Navbar({
               const isActive =
                 currentView === item.id ||
                 (currentView === "home" && activeSection === item.id);
+
+              if (item.href) {
+                return (
+                  <a
+                    key={item.id}
+                    href={item.href}
+                    className="dock-nav-item"
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    <Icon size={14} className="dock-item-icon" />
+                    <span className="dock-item-label">{item.label}</span>
+                  </a>
+                );
+              }
 
               return (
                 <button
