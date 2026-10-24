@@ -9,6 +9,7 @@ import MatchPredictionPage from "./MatchPredictionPage";
 import TeamsPage from "./TeamsPage";
 import TeamDetailPage from "./TeamDetailPage";
 import PlayersPage from "./PlayersPage";
+import PlayerRatingsPage from "./PlayerRatingsPage";
 import LoadingState from "../components/LoadingState";
 import ErrorMessage from "../components/ErrorMessage";
 import PredictionHistory from "../components/PredictionHistory";
@@ -356,6 +357,16 @@ export default function Dashboard() {
       return;
     }
 
+    if (sectionId === "player-ratings") {
+      setCurrentView("player-ratings");
+      setSelectedTeam(null);
+      try {
+        window.location.hash = "#player-ratings";
+      } catch {}
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
     if (sectionId === "statistics") {
       setToastNotice({
         title: "Statistics Engine",
@@ -405,6 +416,8 @@ export default function Dashboard() {
         setCurrentView("history");
       } else if (hash === "#players") {
         setCurrentView("players");
+      } else if (hash === "#player-ratings") {
+        setCurrentView("player-ratings");
       } else if (!hash || hash === "#" || hash === "#/") {
         setCurrentView("home");
       }
@@ -818,6 +831,13 @@ export default function Dashboard() {
       {currentView === "players" && (
         <main className="main-content-container" style={{ paddingTop: "7.5rem", paddingBottom: "4rem" }}>
           <PlayersPage />
+        </main>
+      )}
+
+      {/* VIEW 6: PLAYER RATINGS — XGBOOST RATING PREDICTOR */}
+      {currentView === "player-ratings" && (
+        <main className="main-content-container" style={{ paddingTop: "7.5rem", paddingBottom: "4rem" }}>
+          <PlayerRatingsPage />
         </main>
       )}
 

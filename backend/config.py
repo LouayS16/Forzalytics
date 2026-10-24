@@ -47,6 +47,10 @@ INJURY_DATASET_PATH = str(ML_DIR / "data" / "dataset_risque_blessure.csv")
 INJURY_LOG_PATH = str(ML_DIR / "data" / "blessures.csv")
 INJURY_MODEL_PATH = str(ML_DIR / "models" / "injury_risk.joblib")
 
+PLAYER_RATINGS_MODEL_PATH = str(ML_DIR / "models" / "player_ratings.joblib")
+UPCOMING_MATCHES_PATH = str(ML_DIR / "data" / "upcoming_matches.csv")
+HISTORICAL_MATCHES_PATH = str(ML_DIR / "data" / "historical_matches.csv")
+
 DATASET_PATH = get_dataset_path()
 MODEL_PATH = get_model_path()
 HISTORY_FILE = get_history_file_path()

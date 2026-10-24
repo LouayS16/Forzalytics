@@ -31,6 +31,12 @@ from backend.app.services.feature_engineering import build_pre_match_features
 from backend.app.services.model_service import load_model, predict_outcome
 from backend.app.services.injury_service import search_players, get_player_risk, warm_up as warm_up_injury
 from backend.app.services.player_photo_service import get_player_photo, get_player_photos
+from backend.app.services.player_rating_service import (
+    search_players as search_rating_players,
+    get_player_fixtures as get_rating_player_fixtures,
+    predict_player_rating,
+    warm_up as warm_up_ratings,
+)
 
 app = Flask(__name__)
 CORS(app)
@@ -300,11 +306,66 @@ def player_photo():
     return jsonify(get_player_photo(name))
 
 
+@app.route("/api/ratings/players", methods=["GET"])
+def ratings_players_search():
+    query = request.args.get("q", "")
+    limit = int(request.args.get("limit", 25))
+    try:
+        players = search_rating_players(query, limit=limit)
+        return jsonify({"query": query, "total": len(players), "players": players})
+    except Exception as e:
+        return jsonify({"error": f"Player ratings search failed: {str(e)}"}), 500
+
+
+@app.route("/api/ratings/fixtures", methods=["GET"])
+def ratings_player_fixtures():
+    player = request.args.get("player", "").strip()
+    if not player:
+        return jsonify({"error": "Query parameter 'player' is required."}), 400
+    try:
+        fixtures = get_rating_player_fixtures(player)
+        return jsonify({"player": player, "total": len(fixtures), "fixtures": fixtures})
+    except Exception as e:
+        return jsonify({"error": f"Failed fetching fixtures: {str(e)}"}), 500
+
+
+@app.route("/api/ratings/predict", methods=["POST", "GET"])
+def ratings_predict():
+    try:
+        if request.method == "POST":
+            data = request.get_json() or {}
+        else:
+            data = request.args.to_dict()
+
+        player = data.get("player", "").strip()
+        if not player:
+            return jsonify({"error": "Missing 'player' parameter."}), 400
+
+        fixture_idx = int(data.get("fixture_idx", 0))
+        role = data.get("role", "Titulaire (Starter)")
+        pos = data.get("position", None)
+        days_override = float(data["days_override"]) if "days_override" in data and data["days_override"] is not None else None
+        home_override = int(data["home_override"]) if "home_override" in data and data["home_override"] is not None else None
+
+        res = predict_player_rating(
+            player_name=player,
+            fixture_idx=fixture_idx,
+            role=role,
+            position=pos,
+            days_override=days_override,
+            home_override=home_override,
+        )
+        return jsonify(res)
+    except Exception as e:
+        return jsonify({"error": f"Rating prediction failed: {str(e)}"}), 500
+
+
 def start_server():
     # Preload dataset & models on start
     get_dataset()
     load_model()
     warm_up_injury()
+    warm_up_ratings()
     print(f"Starting MatchPredict Real-Time API Server on http://{HOST}:{PORT} ...")
     app.run(host=HOST, port=PORT, debug=False)
 

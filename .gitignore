@@ -40,3 +40,8 @@ backend/player_photos_cache.json
 # Scratchpads & Local Logs
 *.log
 .system_generated/
+
+# Large Datasets (>100MB exceeds GitHub limit)
+ratings.csv
+ml/data/ratings.csv
+

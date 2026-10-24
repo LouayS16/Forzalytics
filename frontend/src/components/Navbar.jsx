@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Home, Shield, Users, BarChart3, History, Target } from "lucide-react";
+import { Home, Shield, Users, BarChart3, History, Target, Star } from "lucide-react";
 import ForzalyticsLogo from "./ForzalyticsLogo";
 
 export default function Navbar({
@@ -23,6 +23,7 @@ export default function Navbar({
     { id: "total-goals", label: "Total Goals (xG)", icon: Target, href: "/total_goals.html" },
     { id: "teams", label: "Teams", icon: Shield },
     { id: "players", label: "Players", icon: Users },
+    { id: "player-ratings", label: "Player Ratings", icon: Star },
     { id: "statistics", label: "Statistics", icon: BarChart3 },
     { id: "history", label: "History", icon: History },
   ];
