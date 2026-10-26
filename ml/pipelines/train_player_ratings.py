@@ -1,22 +1,32 @@
 """
 train_player_ratings.py
-Trains the player performance rating models (from MiniProjetML.ipynb) and exports
-all artifacts to ml/models/ and ml/data/ for the Forzalytics platform.
+Production training pipeline faithfully adapted from player_ratings.ipynb.
+Trains player performance rating models and exports all artifacts required by
+the Forzalytics backend service (ml/models/ and ml/data/).
 
-Pipeline architecture:
+Pipeline Architecture:
 - Chronological Split: Train (<= 2020), Conformal Calibration (2021), Test (>= 2022)
-- Feature Engineering: Rolling ratings (L3, L5, L10), Rest days, Volatility (std 5),
-  Momentum (L3 - L10), Home/Away binary, and One-Hot encoded positions.
-- Cascading Router:
-  * Role Classifier (XGBClassifier) predicts starter vs substitute
-  * Model A: Starter Expert (XGBRegressor max_depth=5)
-  * Model B: Substitute Expert (XGBRegressor max_depth=3)
-- Conformal Prediction: Calibrated 90% prediction interval (q_hat margin)
-- Similarity Engine: StandardScaler + NearestNeighbors (KNN, k=3) for context comparison
-- Artifacts: Saves player_ratings.joblib, upcoming_matches.csv, historical_matches.csv
+- Feature Engineering (Shift(1) to avoid data leakage):
+  * Rolling ratings (L3, L5, L10)
+  * Form volatility (rating_std_5)
+  * Form momentum (rating_last_3 - rating_last_10)
+  * Workload proxy (days_since_last_match)
+  * Context: is_home, opponent, one-hot encoded positions
+- Two-Model Routing System:
+  * Model A: Starter Expert (XGBRegressor max_depth=5, lr=0.1, n_est=100)
+  * Model B: Substitute Expert (XGBRegressor max_depth=3, lr=0.1, n_est=100)
+  * Role Classifier: XGBClassifier for automatic role prediction
+- Conformal Prediction:
+  * Finite-sample-corrected quantile q_hat on 2021 validation set (90% target coverage)
+- Similarity Engine:
+  * StandardScaler + NearestNeighbors (KNN k=3, euclidean metric)
+- Artifact Exports:
+  * ml/models/player_ratings.joblib (Models, scaler, KNN, config, metrics)
+  * ml/data/upcoming_matches.csv (Test fixtures)
+  * ml/data/historical_matches.csv (Historical contexts for similarity search)
 
 Run:
-    python ml/pipelines/train_player_ratings.py
+    py ml/pipelines/train_player_ratings.py
 """
 import sys
 from pathlib import Path
@@ -24,9 +34,9 @@ from pathlib import Path
 import joblib
 import numpy as np
 import pandas as pd
+from sklearn.metrics import mean_absolute_error
 from sklearn.neighbors import NearestNeighbors
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import mean_absolute_error
 import xgboost as xgb
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
@@ -40,6 +50,21 @@ DATASET_CANDIDATES = [
     ROOT_DIR.parent / "ratings.csv",
 ]
 
+SEED = 42
+TRAIN_END_YEAR = 2020
+CALIB_YEAR = 2021
+TEST_START_YEAR = 2022
+ALPHA = 0.10  # 90% prediction intervals
+
+FORM_FEATURES = [
+    "rating_last_3",
+    "rating_last_5",
+    "rating_last_10",
+    "days_since_last_match",
+    "rating_std_5",
+    "momentum",
+]
+
 
 def resolve_ratings_path() -> Path:
     for p in DATASET_CANDIDATES:
@@ -50,68 +75,71 @@ def resolve_ratings_path() -> Path:
     )
 
 
+def past_rolling(df: pd.DataFrame, window: int, stat: str, min_periods: int) -> pd.Series:
+    """
+    Rolling statistic over a player's previous matches only.
+    shift(1) strictly excludes the current match to prevent data leakage.
+    """
+    return df.groupby("player")["rating"].transform(
+        lambda s: getattr(s.shift(1).rolling(window, min_periods=min_periods), stat)()
+    )
+
+
 def extract_features(df_clean: pd.DataFrame):
     """
-    Computes time-aware non-leaking features per player exactly as in MiniProjetML.ipynb.
+    Builds time-aware features exactly as defined in player_ratings.ipynb (Cell 8).
     """
-    print("Computing player rolling metrics and momentum...")
-    df_clean = df_clean.sort_values(by=["player", "datetime"]).reset_index(drop=True)
+    print("Computing player rolling metrics, workload, and context...")
+    df = df_clean.sort_values(by=["player", "datetime"]).copy()
 
-    # Rolling averages with shift(1) to strictly prevent data leakage
-    df_clean["rating_last_3"] = df_clean.groupby("player")["rating"].transform(
-        lambda x: x.shift(1).rolling(window=3, min_periods=1).mean()
-    )
-    df_clean["rating_last_5"] = df_clean.groupby("player")["rating"].transform(
-        lambda x: x.shift(1).rolling(window=5, min_periods=1).mean()
-    )
-    df_clean["rating_last_10"] = df_clean.groupby("player")["rating"].transform(
-        lambda x: x.shift(1).rolling(window=10, min_periods=5).mean()
-    )
+    # 1. Form rolling metrics
+    df["rating_last_3"] = past_rolling(df, 3, "mean", 1)
+    df["rating_last_5"] = past_rolling(df, 5, "mean", 1)
+    df["rating_last_10"] = past_rolling(df, 10, "mean", 5)
+    df["rating_std_5"] = past_rolling(df, 5, "std", 3)  # volatility
+    df["momentum"] = df["rating_last_3"] - df["rating_last_10"]  # short- vs long-term form
 
-    # Workload proxy: days since player's last match
-    df_clean["days_since_last_match"] = df_clean.groupby("player")["datetime"].diff().dt.days
+    # 2. Workload proxy: days since player's last match
+    df["days_since_last_match"] = df.groupby("player")["datetime"].diff().dt.days
 
-    # Form volatility: rolling standard deviation of last 5 matches
-    df_clean["rating_std_5"] = df_clean.groupby("player")["rating"].transform(
-        lambda x: x.shift(1).rolling(window=5, min_periods=3).std()
-    )
+    # 3. Contextual features
+    df["is_home"] = (df["home_or_away"].astype(str).str.lower().str.contains("home")).astype(int)
 
-    # Momentum: short term form vs baseline
-    df_clean["momentum"] = df_clean["rating_last_3"] - df_clean["rating_last_10"]
-
-    # Filter out initial matches with insufficient rolling history
-    df_features = df_clean.dropna(
-        subset=["rating_last_10", "days_since_last_match", "rating_std_5"]
-    ).copy()
-
-    df_features["year"] = df_features["datetime"].dt.year
-    df_features["is_home"] = (
-        df_features["home_or_away"].astype(str).str.lower().str.contains("home")
-    ).astype(int)
-
-    # One-hot encode position
-    df_features = pd.get_dummies(df_features, columns=["position"], drop_first=False, dtype=int)
-
-    # Starter vs Substitute indicator
-    if "position_Sub" in df_features.columns:
-        df_features["is_starter"] = (df_features["position_Sub"] == 0).astype(int)
-        df_master = df_features.drop(columns=["position_Sub"]).copy()
+    # Opponent derivation
+    if "away_team" in df.columns and "home_team" in df.columns:
+        df["opponent"] = np.where(df["is_home"] == 1, df["away_team"], df["home_team"])
     else:
-        df_features["is_starter"] = 1
-        df_master = df_features.copy()
+        df["opponent"] = "Adversaire"
 
-    position_cols = [c for c in df_master.columns if c.startswith("position_")]
-    all_features = [
-        "rating_last_3",
-        "rating_last_5",
-        "rating_last_10",
-        "days_since_last_match",
-        "rating_std_5",
-        "momentum",
-        "is_home",
-    ] + position_cols
+    df["year"] = df["datetime"].dt.year
+
+    # 4. Filter matches with insufficient rolling history
+    df = df.dropna(subset=["rating_last_10", "days_since_last_match", "rating_std_5"]).copy()
+
+    # 5. One-hot encode position
+    df = pd.get_dummies(df, columns=["position"], drop_first=False, dtype=int)
+
+    # Starter vs Substitute indicator (position_Sub -> is_starter)
+    if "position_Sub" in df.columns:
+        df["is_starter"] = (df["position_Sub"] == 0).astype(int)
+        df_master = df.drop(columns=["position_Sub"]).reset_index(drop=True)
+    else:
+        df["is_starter"] = 1
+        df_master = df.reset_index(drop=True)
+
+    position_cols = sorted([c for c in df_master.columns if c.startswith("position_")])
+    all_features = FORM_FEATURES + ["is_home"] + position_cols
 
     return df_master, all_features, position_cols
+
+
+def conformal_margin(residuals: np.ndarray, alpha: float = 0.10) -> float:
+    """
+    Finite-sample-corrected quantile of absolute calibration errors (from notebook Cell 18).
+    """
+    n = len(residuals)
+    level = min(1.0, np.ceil((n + 1) * (1 - alpha)) / n)
+    return float(np.quantile(residuals, level, method="higher"))
 
 
 def main():
@@ -134,24 +162,24 @@ def main():
     print(f"Features engineered: {len(all_features)} features, {len(df_master):,} valid matches.")
 
     # Chronological Split
-    train_data = df_master[df_master["year"] <= 2020].copy()
-    val_data = df_master[df_master["year"] == 2021].copy()
-    test_data = df_master[df_master["year"] >= 2022].copy()
+    train_data = df_master[df_master["year"] <= TRAIN_END_YEAR].copy()
+    calib_data = df_master[df_master["year"] == CALIB_YEAR].copy()
+    test_data = df_master[df_master["year"] >= TEST_START_YEAR].copy()
 
     train_starters = train_data[train_data["is_starter"] == 1].copy()
     train_subs = train_data[train_data["is_starter"] == 0].copy()
-    val_starters = val_data[val_data["is_starter"] == 1].copy()
+    calib_starters = calib_data[calib_data["is_starter"] == 1].copy()
     test_starters = test_data[test_data["is_starter"] == 1].copy()
     test_subs = test_data[test_data["is_starter"] == 0].copy()
 
     print(f"Train matches: {len(train_data):,} (Starters: {len(train_starters):,}, Subs: {len(train_subs):,})")
-    print(f"Validation matches (2021): {len(val_data):,}")
-    print(f"Test matches (2022+): {len(test_data):,}")
+    print(f"Calibration matches ({CALIB_YEAR} starters): {len(calib_starters):,}")
+    print(f"Test matches ({TEST_START_YEAR}+): {len(test_data):,} (Starters: {len(test_starters):,}, Subs: {len(test_subs):,})")
 
     # 1. Model A: Starter Expert
     print("\nTraining Model A (Starters XGBRegressor)...")
     model_starters = xgb.XGBRegressor(
-        n_estimators=100, learning_rate=0.1, max_depth=5, random_state=42
+        n_estimators=100, learning_rate=0.1, max_depth=5, random_state=SEED
     )
     model_starters.fit(train_starters[all_features], train_starters["rating"])
     preds_starters = model_starters.predict(test_starters[all_features])
@@ -161,7 +189,7 @@ def main():
     # 2. Model B: Substitute Expert
     print("\nTraining Model B (Substitutes XGBRegressor)...")
     model_subs = xgb.XGBRegressor(
-        n_estimators=100, learning_rate=0.1, max_depth=3, random_state=42
+        n_estimators=100, learning_rate=0.1, max_depth=3, random_state=SEED
     )
     model_subs.fit(train_subs[all_features], train_subs["rating"])
     preds_subs = model_subs.predict(test_subs[all_features])
@@ -185,18 +213,18 @@ def main():
         learning_rate=0.1,
         max_depth=4,
         eval_metric="logloss",
-        random_state=42,
+        random_state=SEED,
     )
     role_classifier.fit(train_full[all_features].astype(float), train_full["is_starter"])
 
-    # 4. Conformal Calibration on 2021 validation set (90% target coverage)
+    # 4. Conformal Calibration on 2021 validation starters (finite-sample corrected)
     print("\nComputing Conformal Prediction Margin (q_hat)...")
-    calib_preds = model_starters.predict(val_starters[all_features])
-    calib_residuals = np.abs(val_starters["rating"] - calib_preds)
-    q_hat = float(np.quantile(calib_residuals, 0.90))
-    print(f"Conformal Margin q_hat (90% coverage): ±{q_hat:.4f}")
+    calib_preds = model_starters.predict(calib_starters[all_features])
+    calib_residuals = np.abs(calib_starters["rating"].values - calib_preds)
+    q_hat = conformal_margin(calib_residuals, ALPHA)
+    print(f"Conformal Margin q_hat ({int((1-ALPHA)*100)}% coverage): ±{q_hat:.4f}")
 
-    # 5. KNN Similarity Engine
+    # 5. KNN Similarity Engine & Scaler
     print("\nFitting KNN Similarity Engine & Scaler...")
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(train_starters[all_features])
@@ -204,38 +232,21 @@ def main():
     knn.fit(X_train_scaled)
 
     # 6. Build Upcoming and Historical Datasets
-    print("\nExtracting upcoming match fixtures with opponents...")
-    if "season" in test_data.columns and "2022/2023" in test_data["season"].values:
-        upcoming = test_data[test_data["season"] == "2022/2023"].sort_values(by=["player", "datetime"]).copy()
-    else:
-        upcoming = test_data.sort_values(by=["player", "datetime"]).copy()
+    print("\nExporting upcoming fixtures and historical matches...")
+    upcoming = test_starters.sort_values(by=["player", "datetime"]).copy()
+    upcoming_cols = ["player", "datetime"]
+    if "opponent" in upcoming.columns:
+        upcoming_cols.append("opponent")
+    if "is_starter" in upcoming.columns:
+        upcoming_cols.append("is_starter")
+    upcoming_cols += [f for f in all_features if f in upcoming.columns]
+    # Remove duplicates while preserving order
+    seen = set()
+    dedup_cols = [c for c in upcoming_cols if not (c in seen or seen.add(c))]
+    upcoming_export = upcoming[dedup_cols]
 
-    # Extract opponent names from raw dataset
-    if "home_team" in upcoming.columns and "away_team" in upcoming.columns:
-        h_col = "home_team"
-        a_col = "away_team"
-    else:
-        raw_df_stripped = raw_df.copy()
-        raw_df_stripped.columns = raw_df_stripped.columns.str.strip()
-        h_col = [c for c in raw_df_stripped.columns if "home" in c.lower() and "team" in c.lower()][0]
-        a_col = [c for c in raw_df_stripped.columns if "away" in c.lower() and "team" in c.lower()][0]
-        raw_teams = raw_df_stripped[["player", "datetime", h_col, a_col]].drop_duplicates()
-        raw_teams["datetime"] = pd.to_datetime(raw_teams["datetime"])
-        raw_teams = raw_teams.rename(columns={h_col: "home_team_raw", a_col: "away_team_raw"})
-        upcoming = pd.merge(upcoming, raw_teams, on=["player", "datetime"], how="left")
-        h_col = "home_team_raw"
-        a_col = "away_team_raw"
-
-    upcoming["opponent"] = np.where(
-        upcoming["is_home"] == 1,
-        upcoming[a_col].fillna("Adversaire"),
-        upcoming[h_col].fillna("Adversaire"),
-    )
-    upcoming = upcoming.drop(columns=[c for c in upcoming.columns if "team" in c.lower()], errors="ignore")
-
-    historical = train_starters[
-        ["player", "datetime", "rating_last_5", "days_since_last_match", "is_home", "rating"]
-    ].copy()
+    historical_cols = ["player", "datetime", "rating_last_5", "days_since_last_match", "is_home", "rating"]
+    historical_export = train_starters[historical_cols].copy()
 
     # 7. Save Artifacts to ml/models/ and ml/data/
     MODELS_DIR.mkdir(parents=True, exist_ok=True)
@@ -245,14 +256,14 @@ def main():
     upcoming_path = DATA_DIR / "upcoming_matches.csv"
     historical_path = DATA_DIR / "historical_matches.csv"
 
-    print(f"\nExporting upcoming fixtures to {upcoming_path} ...")
-    upcoming.to_csv(upcoming_path, index=False)
+    print(f"Exporting upcoming fixtures to {upcoming_path} ...")
+    upcoming_export.to_csv(upcoming_path, index=False)
 
     print(f"Exporting historical matches to {historical_path} ...")
-    historical.to_csv(historical_path, index=False)
+    historical_export.to_csv(historical_path, index=False)
 
-    # Master bundle
-    player_names = sorted(upcoming["player"].dropna().unique().tolist())
+    # Master bundle for backend service
+    player_names = sorted(upcoming_export["player"].dropna().unique().tolist())
     bundle = {
         "model_starters": model_starters,
         "model_subs": model_subs,
@@ -261,7 +272,7 @@ def main():
         "scaler": scaler,
         "features": all_features,
         "position_cols": position_cols,
-        "q_hat": q_hat,
+        "q_hat": round(float(q_hat), 4),
         "player_names": player_names,
         "metrics": {
             "mae_starters": round(float(mae_starters), 4),
@@ -276,8 +287,8 @@ def main():
 
     print("\n[SUCCESS] All player rating model artifacts exported successfully!")
     print(f"   Bundle: {bundle_path}")
-    print(f"   Upcoming fixtures: {upcoming_path} ({len(upcoming):,} rows)")
-    print(f"   Historical matches: {historical_path} ({len(historical):,} rows)")
+    print(f"   Upcoming fixtures: {upcoming_path} ({len(upcoming_export):,} rows)")
+    print(f"   Historical matches: {historical_path} ({len(historical_export):,} rows)")
 
 
 if __name__ == "__main__":
